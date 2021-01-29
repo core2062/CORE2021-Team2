@@ -26,7 +26,7 @@ deploy {
         // Built in artifact to deploy arbitrary files to the roboRIO.
         fileTreeArtifact('frcStaticFileDeploy') {
             // The directory below is the local directory to deploy
-            files = fileTree(dir: 'src/main/deploy')
+            files = fileTree(dir: 'src')
             // Deploy to RoboRIO target, into /home/lvuser/deploy
             targets << "roborio"
             directory = '/home/lvuser/deploy'
@@ -68,16 +68,21 @@ model {
                 targetPlatform wpi.platforms.desktop
             }
 
+            binaries.all {
+                cppCompiler.args('-g')
+                linker.args("-L../CORERobotLib/lib/debug",'-lCORERobotLib')
+            }
             sources.cpp {
                 source {
-                    srcDir 'src/main/cpp'
+                    srcDir 'src'
+                    srcDir 'src/auto'
                     include '**/*.cpp', '**/*.cc'
                 }
                 exportedHeaders {
-                    srcDir 'src/main/include'
-                    if (includeSrcInIncludeRoot) {
-                        srcDir 'src/main/cpp'
-                    }
+                    srcDir 'src'
+                    srcDir 'src/auto'
+                    srcDir '../CORERobotLib/src' 
+                    srcDir '../CORERobotLib/3rdparty/json/src/'
                 }
             }
 
@@ -92,7 +97,7 @@ model {
 
             sources.cpp {
                 source {
-                    srcDir 'src/test/cpp'
+                    srcDir 'src'
                     include '**/*.cpp'
                 }
             }

@@ -8,8 +8,8 @@
 #include <COREFramework/COREScheduler.h>
 #include "DriveSubsystem.h"
 #include "Config.h"
-// #include "TestRoutine.h"
-// #include "DriveRoutine.h"
+#include "auto/TestRoutine.h"
+#include "auto/DriveRoutine.h"
 
 using namespace CORE;
 using namespace std;
@@ -17,8 +17,7 @@ using namespace std;
 class Robot : public CORERobot {
 public: 
  	Robot();
-	void RobotPeriodic() override;
-	void TeleopPeriodic() override;
+	~Robot();
 	void robotInit() override;
     void teleopInit() override;
     void teleop() override;
@@ -28,9 +27,7 @@ public:
 	DriveSubsystem driveSubsystem;
 	TestRoutine testRoutine;
 	DriveRoutine driveRoutine;
-	RobotContainer robotContainer;
 
 private:
-  	frc2::Command* m_autonomousCommand = nullptr;
 	static Robot * m_instance;
 };
