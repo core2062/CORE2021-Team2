@@ -3,7 +3,6 @@
 #include <frc/Compressor.h>
 #include <frc/DoubleSolenoid.h>
 #include <ctre/Phoenix.h>
-#include <AHRS.h>
 #include <CORERobotLib.h>
 #include <COREFramework/COREScheduler.h>
 #include <COREUtilities/CORETimer.h>

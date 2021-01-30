@@ -26,11 +26,9 @@ public:
 	void testInit() override;
 	static Robot * GetInstance();
 	DriveSubsystem driveSubsystem;
-	TestRoutine testRoutine;
-	DriveRoutine driveRoutine;
-	RobotContainer robotContainer;
+	// TestRoutine testRoutine;
+	// DriveRoutine driveRoutine;
 
 private:
-  	frc2::Command* m_autonomousCommand = nullptr;
 	static Robot * m_instance;
 };
