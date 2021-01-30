@@ -7,6 +7,7 @@
 #include <CORERobotLib.h>
 #include <COREFramework/COREScheduler.h>
 #include "DriveSubsystem.h"
+#include "LauncherSubsystem.h"
 #include "Config.h"
 #include "auto/TestRoutine.h"
 #include "auto/DriveRoutine.h"
@@ -25,6 +26,7 @@ public:
 	void testInit() override;
 	static Robot * GetInstance();
 	DriveSubsystem driveSubsystem;
+	LauncherSubsystem launcherSubsystem;
 	TestRoutine testRoutine;
 	DriveRoutine driveRoutine;
 

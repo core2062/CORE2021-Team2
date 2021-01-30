@@ -18,12 +18,14 @@ public:
 	
 	void setMotorSpeed(double percent);
 	void initTalons();
-	void toggleGear();
-	void resetEncoders();
+	void resetEncoder();
+	void toggleRelease();
 
 private:
 	TalonSRX m_winch;
     DoubleSolenoid m_winchSolenoid;
-	double m_winchDistance;
-	bool m_toggle;
+	double m_winchDistance, m_motorPercentSpeed;
+	bool m_released;
+	COREConstant<double> m_winchSpeed;
+	COREConstant<int> m_maxWinchDrawback;
 };

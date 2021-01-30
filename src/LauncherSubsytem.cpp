@@ -2,20 +2,46 @@
 
 LauncherSubsystem::LauncherSubsystem() : 
                                         m_winch(WINCH_PORT),
-                                        m_winchSolenoid(WINCH_PCM,WINCH_PISTON_IN_PORT,WINCH_PISTON_OUT_PORT)
+                                        m_winchSolenoid(WINCH_PCM,WINCH_PISTON_IN_PORT,WINCH_PISTON_OUT_PORT),
+                                        m_winchSpeed("Winch drawback speed",0.1),
+                                        m_maxWinchDrawback("Max winch drawback distance", 2048)
 {}
-
-//Note 2863 encoder ticks is 3ft using 2020 Bot wheels
 
 void LauncherSubsystem::robotInit() {
 	// Registers joystick axis and buttons, does inital setup for talons
-	operatorJoystick->RegisterButton(CORE::COREJoystick::Y_BUTTON);
+	operatorJoystick->RegisterAxis(CORE::COREJoystick::RIGHT_TRIGGER_AXIS);
+	operatorJoystick->RegisterButton(CORE::COREJoystick::B_BUTTON);
+    initTalons();
 }
 
 void LauncherSubsystem::teleopInit() {
+    m_motorPercentSpeed = 0;
+    initTalons();
 }
 
 void LauncherSubsystem::teleop() {
+
+    // Putting useful data to smartdashboard
+    SmartDashboard::PutNumber("Winch drawback distance",m_winch.GetSelectedSensorPosition(0));
+    SmartDashboard::PutBoolean("Winch motor active", !m_released);
+    SmartDashboard::PutNumber("Winch motor speed", m_motorPercentSpeed);
+
+    //Setting motor speed only if released
+    double triggerAxis = operatorJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_TRIGGER_AXIS);
+    if (m_winch.GetSelectedSensorPosition(0) <= m_maxWinchDrawback.Get() && !m_released) {
+        m_motorPercentSpeed = m_winchSpeed.Get() * triggerAxis;
+    } else {
+        m_motorPercentSpeed = 0;
+    }
+
+    if (operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::B_BUTTON)) {
+        toggleRelease();
+    }
+    setMotorSpeed(m_motorPercentSpeed);
+}
+
+void LauncherSubsystem::setMotorSpeed(double speed) {
+    m_winch.Set(ControlMode::PercentOutput,speed);
 }
 
 void LauncherSubsystem::initTalons() {
@@ -33,18 +59,20 @@ void LauncherSubsystem::initTalons() {
 	m_winch.SetInverted(false);
 }
 
-void LauncherSubsystem::resetEncoders() {
+void LauncherSubsystem::resetEncoder() {
     m_winch.SetSelectedSensorPosition(0);
 }
 
-void LauncherSubsystem::toggleGear() {
-	// Shifts from high gear to low gear or vice versa
-	if (m_toggle) {
+void LauncherSubsystem::toggleRelease() {
+	// Releases launcher
+	if (m_released) {
 		m_winchSolenoid.Set(DoubleSolenoid::kForward);
-		m_toggle = false;
+        resetEncoder();
+		m_released = false;
 	} else {
 		m_winchSolenoid.Set(DoubleSolenoid::kReverse);
-		m_toggle = true;
+        resetEncoder();
+		m_released = true;
 	}
 }
 
