@@ -1,13 +1,16 @@
 #pragma once
 
 /* Drive ports */
-#define RIGHT_FRONT_PORT 20
-#define RIGHT_BACK_PORT 14
-#define LEFT_FRONT_PORT 19
-#define LEFT_BACK_PORT 32
+#define RIGHT_FRONT_PORT 2
+#define RIGHT_BACK_PORT 3
+#define LEFT_FRONT_PORT 4
+#define LEFT_BACK_PORT 5
 
 /* Launcher Ports */
-#define WINCH_PORT 32
+#define WINCH_PORT 10
+
+/* Conveyor Ports */
+#define CONVEYOR_PORT 11
 
 /* Solenoids */
 #define LEFT_DRIVE_SHIFTER_PCM 2
