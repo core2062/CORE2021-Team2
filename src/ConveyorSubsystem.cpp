@@ -1,9 +1,9 @@
 #include "ConveyorSubsystem.h"
 #include <CORERobotLib.h>
 
-ConveyorSubsystem::ConveyorSubsystem() :    m_conveyorMotor(CONVEYOR_PORT),
-                                            m_conveyorForwardSpeed("Conveyor Forward Speed", 0.2),
-                                            m_conveyorReverseSpeed("Conveyor Reverse Speed", -0.2) {
+ConveyorSubsystem::ConveyorSubsystem() : m_conveyorMotor(CONVEYOR_PORT),
+                                         m_conveyorForwardSpeed("Conveyor Forward Speed", 0.2),
+                                         m_conveyorReverseSpeed("Conveyor Reverse Speed", -0.2) {
 
 }
 
