@@ -1,10 +1,10 @@
 #pragma once
 
 /* Drive ports */
-#define RIGHT_FRONT_PORT 20
-#define RIGHT_BACK_PORT 14
-#define LEFT_FRONT_PORT 19
-#define LEFT_BACK_PORT 32
+#define RIGHT_FRONT_PORT 4
+#define RIGHT_BACK_PORT 5
+#define LEFT_FRONT_PORT 6
+#define LEFT_BACK_PORT 7
 
 /* Launcher Ports */
 #define WINCH_PORT 32
