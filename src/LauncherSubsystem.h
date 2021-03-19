@@ -4,9 +4,14 @@
 #include <frc/DoubleSolenoid.h>
 #include <ctre/Phoenix.h>
 #include "Config.h"
+#include <frc/DigitalInput.h>
 
 using namespace CORE;
 using namespace frc;
+
+enum LauncherWantedState {
+	STANDBY, COCK, LAUNCH
+};
 
 class LauncherSubsystem : public CORESubsystem {
 public:
@@ -14,16 +19,23 @@ public:
 	void robotInit() override;
 	void teleopInit() override;
 	void teleop() override;
-	void teleopEnd() override;
 	
+	void launch();
+	void cockLauncher();
 	void setMotorSpeed(double percent);
 	void initTalons();
-	void toggleGear();
-	void resetEncoders();
+	void resetEncoder();
+	double getEncoderValue();
+	void toggleRelease();
+	void toggleDogShifter();
 
 private:
-	TalonSRX m_winch;
-    DoubleSolenoid m_winchSolenoid;
-	double m_winchDistance;
-	bool m_toggle;
+	TalonSRX m_frontWinch, m_backWinch;
+	COREConstant<double> m_winchSpeed;
+	LauncherWantedState m_wantedState;
+	COREConstant<int> m_maxWinchDrawback;
+    DoubleSolenoid m_dogShifterSolenoid, m_releaseSolenoid;
+	double m_winchDistance, m_motorPercentSpeed, m_loopNumber;
+	bool m_released, m_isMotorEngaged, m_isReleasedEngaged, m_isLauncherDown;
+	DigitalInput m_limitSwitch;
 };
