@@ -1,12 +1,12 @@
 #include "LauncherSubsystem.h"
 
 LauncherSubsystem::LauncherSubsystem() : 
-                                        m_winchOne(WINCH_ONE_PORT),
-                                        m_winchTwo(WINCH_TWO_PORT),
-                                        m_winchSolenoid(WINCH_PCM,WINCH_RELEASE_PISTON_IN_PORT,WINCH_RELEASE_PISTON_OUT_PORT),
-                                        m_unnamedWinchSolenoid(WINCH_PCM,UNNAMED_WINCH_RELEASE_PISTON_IN_PORT,UNNAMED_WINCH_RELEASE_PISTON_OUT_PORT),
+                                        m_frontWinch(WINCH_ONE_PORT),
+                                        m_backWinch(WINCH_TWO_PORT),
+                                        m_releaseSolenoid(WINCH_PCM,WINCH_RELEASE_PISTON_IN_PORT,WINCH_RELEASE_PISTON_OUT_PORT),
+                                        m_dogShifterSolenoid(WINCH_PCM,UNNAMED_WINCH_RELEASE_PISTON_IN_PORT,UNNAMED_WINCH_RELEASE_PISTON_OUT_PORT),
                                         m_winchSpeed("Winch drawback speed",0.1),
-                                        m_maxWinchDrawback("Max winch drawback distance", 2048)
+                                        m_limiter("Max winch drawback distance", 2048)
 {}
 
 void LauncherSubsystem::robotInit() {
@@ -25,14 +25,14 @@ void LauncherSubsystem::teleopInit() {
 void LauncherSubsystem::teleop() {
 
     // Putting useful data to smartdashboard
-    SmartDashboard::PutNumber("Winch drawback distance",m_winchOne.GetSelectedSensorPosition(0));
+    SmartDashboard::PutNumber("Winch drawback distance",m_frontWinch.GetSelectedSensorPosition(0));
     SmartDashboard::PutBoolean("Winch motor active", !m_released);
-    SmartDashboard::PutBoolean("Unnamed solenoid toggled", m_unnamedSolenoidToggle);
+    SmartDashboard::PutBoolean("Dog shifter toggled", m_dogShifterToggle);
     SmartDashboard::PutNumber("Winch motor speed", m_motorPercentSpeed);
 
     // Setting motor speed only if released
     double triggerAxis = operatorJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_TRIGGER_AXIS);
-    if (m_winchOne.GetSelectedSensorPosition(0) <= m_maxWinchDrawback.Get() && !m_released) {
+    if (m_frontWinch.GetSelectedSensorPosition(0) <= m_limiter.Get() && !m_released) {
         m_motorPercentSpeed = m_winchSpeed.Get() * triggerAxis;
     } else {
         m_motorPercentSpeed = 0;
@@ -52,41 +52,41 @@ void LauncherSubsystem::teleop() {
 
 // Sets the speed of the winch motor, only able to be called when m_released is false
 void LauncherSubsystem::setMotorSpeed(double speed) {
-    m_winchOne.Set(ControlMode::PercentOutput,speed);
-    m_winchTwo.Set(ControlMode::PercentOutput,speed);
+    m_frontWinch.Set(ControlMode::PercentOutput,speed);
+    m_backWinch.Set(ControlMode::PercentOutput,speed);
 }
 
 void LauncherSubsystem::initTalons() {
 	// Sets up talons
-	m_winchOne.Set(ControlMode::PercentOutput, 0);
-	m_winchTwo.Set(ControlMode::PercentOutput, 0);
+	m_frontWinch.Set(ControlMode::PercentOutput, 0);
+	m_backWinch.Set(ControlMode::PercentOutput, 0);
 
 	// Encoder Functions
-    m_winchOne.SetStatusFramePeriod(StatusFrameEnhanced::Status_1_General, 10, 0);
+    m_frontWinch.SetStatusFramePeriod(StatusFrameEnhanced::Status_1_General, 10, 0);
  
-    m_winchOne.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
+    m_frontWinch.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
  
-	m_winchOne.SetSensorPhase(false);
+	m_frontWinch.SetSensorPhase(false);
 
 	// Motor Inversion
-	m_winchOne.SetInverted(false);
-	m_winchTwo.SetInverted(true);
+	m_frontWinch.SetInverted(false);
+	m_backWinch.SetInverted(true);
 }
 
 void LauncherSubsystem::resetEncoder() {
-    m_winchOne.SetSelectedSensorPosition(0);
+    m_frontWinch.SetSelectedSensorPosition(0);
 }
 
 // Toggles the launcher release, disables movement of the winch while released
 void LauncherSubsystem::toggleRelease() {
 	// Releases launcher
 	if (m_released) {
-		m_winchSolenoid.Set(DoubleSolenoid::kForward);
+		m_releaseSolenoid.Set(DoubleSolenoid::kForward);
         // Will reset the encoders everytime to accuratly determine the winch soft-stop 
         resetEncoder();
 		m_released = false;
 	} else {
-		m_winchSolenoid.Set(DoubleSolenoid::kReverse);
+		m_releaseSolenoid.Set(DoubleSolenoid::kReverse);
         // Will reset the encoders everytime to accuratly determine the winch soft-stop 
         resetEncoder();
 		m_released = true;
@@ -94,12 +94,12 @@ void LauncherSubsystem::toggleRelease() {
 }
 
 void LauncherSubsystem::toggleUnnamed() {
-	if (m_unnamedSolenoidToggle) {
-		m_unnamedWinchSolenoid.Set(DoubleSolenoid::kForward);
-		m_unnamedSolenoidToggle = false;
+	if (m_dogShifterToggle) {
+		m_dogShifterSolenoid.Set(DoubleSolenoid::kForward);
+		m_dogShifterToggle = false;
 	} else {
-		m_unnamedWinchSolenoid.Set(DoubleSolenoid::kReverse);
-		m_unnamedSolenoidToggle = true;
+		m_dogShifterSolenoid.Set(DoubleSolenoid::kReverse);
+		m_dogShifterToggle = true;
 	}
 }
 

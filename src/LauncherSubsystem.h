@@ -23,10 +23,10 @@ public:
 	void toggleUnnamed();
 
 private:
-	TalonSRX m_winchOne,m_winchTwo;
-    DoubleSolenoid m_winchSolenoid,m_unnamedWinchSolenoid;
-	double m_winchDistance, m_motorPercentSpeed;
-	bool m_released,m_unnamedSolenoidToggle;
+	TalonSRX m_frontWinch,m_backWinch;
+    DoubleSolenoid m_releaseSolenoid,m_dogShifterSolenoid;
+	double m_motorPercentSpeed;
+	bool m_released, m_dogShifterToggle;
 	COREConstant<double> m_winchSpeed;
-	COREConstant<int> m_maxWinchDrawback;
+	COREConstant<int> m_limiter;
 };
