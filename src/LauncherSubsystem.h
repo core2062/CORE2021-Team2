@@ -20,12 +20,13 @@ public:
 	void initTalons();
 	void resetEncoder();
 	void toggleRelease();
+	void toggleUnnamed();
 
 private:
-	TalonSRX m_winch;
-    DoubleSolenoid m_winchSolenoid;
+	TalonSRX m_winchOne,m_winchTwo;
+    DoubleSolenoid m_winchSolenoid,m_unnamedWinchSolenoid;
 	double m_winchDistance, m_motorPercentSpeed;
-	bool m_released;
+	bool m_released,m_unnamedSolenoidToggle;
 	COREConstant<double> m_winchSpeed;
 	COREConstant<int> m_maxWinchDrawback;
 };
