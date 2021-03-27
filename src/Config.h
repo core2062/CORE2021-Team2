@@ -7,7 +7,10 @@
 #define LEFT_BACK_PORT 7
 
 /* Launcher Ports */
-#define WINCH_PORT 32
+#define WINCH_PORT 10
+
+/* Conveyor Ports */
+#define CONVEYOR_PORT 11
 
 /* Solenoids */
 #define LEFT_DRIVE_SHIFTER_PCM 2
