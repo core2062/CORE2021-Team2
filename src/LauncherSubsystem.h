@@ -20,7 +20,7 @@ public:
 	void initTalons();
 	void resetEncoder();
 	void toggleRelease();
-	void toggleUnnamed();
+	void toggledogShifter();
 
 private:
 	TalonSRX m_frontWinch,m_backWinch;

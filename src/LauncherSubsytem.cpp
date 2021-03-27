@@ -46,7 +46,7 @@ void LauncherSubsystem::teleop() {
 
     
     if (operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::A_BUTTON)) {
-        toggleUnnamed();
+        toggledogShifter();
     }
 }
 
@@ -70,7 +70,7 @@ void LauncherSubsystem::initTalons() {
 
 	// Motor Inversion
 	m_frontWinch.SetInverted(false);
-	m_backWinch.SetInverted(true);
+	m_backWinch.SetInverted(false);
 }
 
 void LauncherSubsystem::resetEncoder() {
@@ -93,7 +93,7 @@ void LauncherSubsystem::toggleRelease() {
 	}
 }
 
-void LauncherSubsystem::toggleUnnamed() {
+void LauncherSubsystem::toggledogShifter() {
 	if (m_dogShifterToggle) {
 		m_dogShifterSolenoid.Set(DoubleSolenoid::kForward);
 		m_dogShifterToggle = false;
