@@ -30,7 +30,7 @@ public:
 	void toggleDogShifter();
 
 private:
-	TalonSRX m_frontWinch, m_backWinch;
+	TalonFX m_frontWinch, m_backWinch;
 	COREConstant<double> m_winchSpeed;
 	LauncherWantedState m_wantedState;
 	COREConstant<int> m_maxWinchDrawback;

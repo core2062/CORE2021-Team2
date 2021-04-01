@@ -28,6 +28,7 @@ void LauncherSubsystem::teleopInit() {
     initTalons();
     m_wantedState = STANDBY;
     m_loopNumber = 0;
+    resetEncoder();
 }
 
 void LauncherSubsystem::teleop() {
@@ -89,17 +90,18 @@ void LauncherSubsystem::cockLauncher() {
         if ((getEncoderValue() <= m_maxWinchDrawback.Get()) || !m_limitSwitch.Get()) {
             setMotorSpeed(m_winchSpeed.Get());
         } else if (m_loopNumber == 0) {
-            toggleRelease();
-            toggleDogShifter();
-            setMotorSpeed(0.1);
-        }
-        m_loopNumber++;
-        if (m_loopNumber > 5) {
-            m_loopNumber = 0;
+            // toggleRelease();
+            // toggleDogShifter();
+            // setMotorSpeed(0.1);
             setMotorSpeed(0);
-            m_isLauncherDown = true;
-            m_wantedState = STANDBY;
         }
+        // m_loopNumber++;
+        // if (m_loopNumber > 5) {
+        //     m_loopNumber = 0;
+        //     setMotorSpeed(0);
+        //     m_isLauncherDown = true;
+        //     m_wantedState = STANDBY;
+        // }
     } 
 
 }
