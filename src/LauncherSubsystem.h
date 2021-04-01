@@ -23,7 +23,7 @@ public:
 	void toggledogShifter();
 
 private:
-	TalonSRX m_frontWinch,m_backWinch;
+	TalonFX m_frontWinch,m_backWinch;
     DoubleSolenoid m_releaseSolenoid,m_dogShifterSolenoid;
 	double m_motorPercentSpeed;
 	bool m_released, m_dogShifterToggle;

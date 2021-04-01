@@ -25,14 +25,14 @@ void LauncherSubsystem::teleopInit() {
 void LauncherSubsystem::teleop() {
 
     // Putting useful data to smartdashboard
-    SmartDashboard::PutNumber("Winch drawback distance",m_frontWinch.GetSelectedSensorPosition(0));
+    SmartDashboard::PutNumber("Winch drawback distance", m_frontWinch.GetSelectedSensorPosition(0));
     SmartDashboard::PutBoolean("Winch motor active", !m_released);
     SmartDashboard::PutBoolean("Dog shifter toggled", m_dogShifterToggle);
     SmartDashboard::PutNumber("Winch motor speed", m_motorPercentSpeed);
 
     // Setting motor speed only if released
     double triggerAxis = operatorJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_TRIGGER_AXIS);
-    if (m_frontWinch.GetSelectedSensorPosition(0) <= m_limiter.Get() && !m_released) {
+    if (m_frontWinch.GetSelectedSensorPosition(0) <= m_limiter.Get()) {
         m_motorPercentSpeed = m_winchSpeed.Get() * triggerAxis;
     } else {
         m_motorPercentSpeed = 0;
