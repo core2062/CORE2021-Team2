@@ -3,8 +3,8 @@
 LauncherSubsystem::LauncherSubsystem() : 
                                         m_frontWinch(FRONT_WINCH_PORT),
 										m_backWinch(BACK_WINCH_PORT),
-                                        m_winchSpeed("Winch drawback speed", 0.1),
-                                        m_maxWinchDrawback("Max winch drawback distance", 2048),
+                                        m_winchSpeed("Winch drawback speed", 0.7),
+                                        m_maxWinchDrawback("Max winch drawback distance", 33000),
                                         m_dogShifterSolenoid(WINCH_PCM, DOG_SHIFTER_PISTON_IN_PORT, DOG_SHIFTER_PISTON_OUT_PORT),
 										m_releaseSolenoid(WINCH_PCM, RELEASE_PISTON_IN_PORT, RELEASE_PISTON_OUT_PORT),
                                         m_limitSwitch(0) //TODO: Put real number here
@@ -53,6 +53,7 @@ void LauncherSubsystem::teleop() {
 void LauncherSubsystem::setMotorSpeed(double speed) {
     //Sets motor speed to inputted value
     m_frontWinch.Set(ControlMode::PercentOutput,speed);
+    m_backWinch.Set(ControlMode::PercentOutput, speed);
 }
 
 void LauncherSubsystem::initTalons() {
@@ -85,16 +86,16 @@ void LauncherSubsystem::cockLauncher() {
         if ((getEncoderValue() <= m_maxWinchDrawback.Get() && m_isReleasedEngaged == false) /*|| !m_limitSwitch.Get()*/) {
             setMotorSpeed(m_winchSpeed.Get());
         } else if (m_isMotorEngaged == true) {
-            time2.Reset();
-            time2.Start();
             m_releaseSolenoid.Set(DoubleSolenoid::kForward);
             toggleDogShifter();
+            time2.Reset();
+            time2.Start();
         }
 
-        if (time2.Get() > 0.4) {
+        if (time2.Get() > 0.25) {
+            m_isReleasedEngaged = true;
             setMotorSpeed(-0.1);
             time2.Reset();
-            m_isReleasedEngaged = true;
         }
 
         if (((getEncoderValue()) >= (m_maxWinchDrawback.Get() - 2000)) && m_isReleasedEngaged == true) {
