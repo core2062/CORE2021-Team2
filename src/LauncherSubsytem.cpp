@@ -27,13 +27,16 @@ void LauncherSubsystem::teleopInit() {
     m_isLauncherDown = false;
     initTalons();
     m_wantedState = STANDBY;
-    m_loopNumber = 0;
     resetEncoder();
+    m_releaseSolenoid.Set(DoubleSolenoid::kReverse);
+    m_dogShifterSolenoid.Set(DoubleSolenoid::kForward);
+    time.Reset();
+    time2.Reset();
 }
 
 void LauncherSubsystem::teleop() {
     // Putting useful data to smartdashboard
-    SmartDashboard::PutNumber("Winch drawback distance",m_frontWinch.GetSelectedSensorPosition(0));
+    SmartDashboard::PutNumber("Winch drawback distance", getEncoderValue());
     SmartDashboard::PutBoolean("Winch motor active", !m_released);
     SmartDashboard::PutNumber("Winch motor speed", m_motorPercentSpeed);
 
@@ -59,7 +62,7 @@ void LauncherSubsystem::initTalons() {
 
 	// Encoder Functions
     m_frontWinch.SetStatusFramePeriod(StatusFrameEnhanced::Status_1_General, 10, 0);
-    m_frontWinch.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
+    m_frontWinch.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::IntegratedSensor, 0, 0);
 	m_frontWinch.SetSensorPhase(false);
 
 	// Motor Inversion
@@ -79,45 +82,44 @@ void LauncherSubsystem::resetEncoder() {
 void LauncherSubsystem::cockLauncher() {
     // Pulls down launcher and prepares it for release
     if (m_isLauncherDown == false && m_wantedState == COCK) {
-        if (m_isMotorEngaged == false) {
+        if ((getEncoderValue() <= m_maxWinchDrawback.Get() && m_isReleasedEngaged == false) /*|| !m_limitSwitch.Get()*/) {
+            setMotorSpeed(m_winchSpeed.Get());
+        } else if (m_isMotorEngaged == true) {
+            time2.Reset();
+            time2.Start();
+            m_releaseSolenoid.Set(DoubleSolenoid::kForward);
             toggleDogShifter();
         }
 
-        if (m_isReleasedEngaged == true) {
-            toggleRelease();
+        if (time2.Get() > 0.4) {
+            setMotorSpeed(-0.1);
+            time2.Reset();
+            m_isReleasedEngaged = true;
         }
 
-        if ((getEncoderValue() <= m_maxWinchDrawback.Get()) || !m_limitSwitch.Get()) {
-            setMotorSpeed(m_winchSpeed.Get());
-        } else if (m_loopNumber == 0) {
-            // toggleRelease();
-            // toggleDogShifter();
-            // setMotorSpeed(0.1);
+        if (((getEncoderValue()) >= (m_maxWinchDrawback.Get() - 2000)) && m_isReleasedEngaged == true) {
             setMotorSpeed(0);
+            m_isLauncherDown = true;
+            m_wantedState = STANDBY;
         }
-        // m_loopNumber++;
-        // if (m_loopNumber > 5) {
-        //     m_loopNumber = 0;
-        //     setMotorSpeed(0);
-        //     m_isLauncherDown = true;
-        //     m_wantedState = STANDBY;
-        // }
     } 
 
 }
 
 void LauncherSubsystem::launch() {
     if (m_isLauncherDown == true && m_wantedState == LAUNCH) {
-        toggleRelease();
-        m_loopNumber++;
-        if (m_loopNumber > 5) {
-            toggleDogShifter();
-            m_loopNumber = 0;
+        if (m_isReleasedEngaged) {
+            toggleRelease();
+            time.Reset();
+            time.Start();
+        }
+        if (time.Get() > 2) {
+            m_isLauncherDown = false;
             m_wantedState = STANDBY;
+            toggleDogShifter();
             resetEncoder();
         }
     }
- 
 }
 
 double LauncherSubsystem::getEncoderValue() {
@@ -129,20 +131,20 @@ double LauncherSubsystem::getEncoderValue() {
 void LauncherSubsystem::toggleRelease() {
 	// Toggles the release arm
 	if (m_isReleasedEngaged) {
-		m_releaseSolenoid.Set(DoubleSolenoid::kForward);
+		m_releaseSolenoid.Set(DoubleSolenoid::kReverse);
 		m_isReleasedEngaged = false;
 	} else {
-		m_releaseSolenoid.Set(DoubleSolenoid::kReverse);
+		m_releaseSolenoid.Set(DoubleSolenoid::kForward);
 		m_isReleasedEngaged = true;
 	}
 }
 
 void LauncherSubsystem::toggleDogShifter() {
 	if (m_isMotorEngaged) {
-		m_dogShifterSolenoid.Set(DoubleSolenoid::kForward);
+		m_dogShifterSolenoid.Set(DoubleSolenoid::kReverse);
 		m_isMotorEngaged = false;
 	} else {
-		m_dogShifterSolenoid.Set(DoubleSolenoid::kReverse);
+		m_dogShifterSolenoid.Set(DoubleSolenoid::kForward);
 		m_isMotorEngaged = true;
 	}
 

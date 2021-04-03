@@ -38,4 +38,6 @@ private:
 	double m_winchDistance, m_motorPercentSpeed, m_loopNumber;
 	bool m_released, m_isMotorEngaged, m_isReleasedEngaged, m_isLauncherDown;
 	DigitalInput m_limitSwitch;
+	CORETimer time;
+	CORETimer time2;
 };
