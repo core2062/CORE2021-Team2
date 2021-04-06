@@ -17,7 +17,7 @@ public:
 
     void setMotor(double speed);
     
+    COREConstant<double> conveyorForwardSpeed, conveyorReverseSpeed;
 private:
     TalonSRX m_conveyorMotor;   
-    COREConstant<double> m_conveyorForwardSpeed, m_conveyorReverseSpeed;
 };

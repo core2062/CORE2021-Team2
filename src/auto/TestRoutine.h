@@ -4,6 +4,8 @@
 #include <CORERobotLib.h>
 #include "DriveAction.h"
 #include "DelayAction.h"
+#include "LauncherAction.h"
+#include "ConveyorAction.h"
 
 using namespace CORE;
 using namespace std;

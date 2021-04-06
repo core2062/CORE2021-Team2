@@ -29,14 +29,16 @@ public:
 	void toggleRelease();
 	void toggleDogShifter();
 
+	LauncherWantedState wantedState;
+	bool isLauncherDown;
+	
 private:
 	TalonFX m_frontWinch, m_backWinch;
 	COREConstant<double> m_winchSpeed;
-	LauncherWantedState m_wantedState;
 	COREConstant<int> m_maxWinchDrawback;
     DoubleSolenoid m_dogShifterSolenoid, m_releaseSolenoid;
 	double m_winchDistance, m_motorPercentSpeed, m_loopNumber;
-	bool m_released, m_isMotorEngaged, m_isReleasedEngaged, m_isLauncherDown;
+	bool m_released, m_isMotorEngaged, m_isReleasedEngaged;
 	DigitalInput m_limitSwitch;
 	CORETimer time;
 	CORETimer time2;
