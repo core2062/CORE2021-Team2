@@ -25,12 +25,24 @@ CORE::COREAutonAction::actionStatus LauncherAction::Action() {
             {
                 return COREAutonAction::actionStatus::END;
             } else {
+                Robot::GetInstance()->launcherSubsystem.wantedState = COCK;
                 return COREAutonAction::actionStatus::CONTINUE;
+
             }
             
             break;
         case LAUNCHER_LAUNCH:
             Robot::GetInstance()->launcherSubsystem.launch();
+            m_wantedState = Robot::GetInstance()->launcherSubsystem.wantedState;
+            m_launcherDown = Robot::GetInstance()->launcherSubsystem.isLauncherDown;
+            if (m_wantedState == STANDBY && m_launcherDown == false)
+            {
+                return COREAutonAction::actionStatus::END;
+            } else {
+                Robot::GetInstance()->launcherSubsystem.wantedState = LAUNCH;
+                return COREAutonAction::actionStatus::CONTINUE;
+
+            }
             break;
 
     }

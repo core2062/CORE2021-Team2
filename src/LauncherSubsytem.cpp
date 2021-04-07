@@ -22,6 +22,7 @@ void LauncherSubsystem::robotInit() {
     isLauncherDown = false;
 
     initTalons();
+    resetEncoder();
     
     wantedState = STANDBY;
 }
@@ -100,7 +101,7 @@ void LauncherSubsystem::cockLauncher() {
             time2.Start();
         }
 
-        if (time2.Get() > 0.25) {
+        if (time2.Get() > 0.40) {
             m_isReleasedEngaged = true;
             setMotorSpeed(-0.1);
             time2.Reset();
