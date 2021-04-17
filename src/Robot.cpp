@@ -6,10 +6,6 @@ Robot::Robot() {
 	m_instance = this;
 }
 
-Robot::~Robot() {
-	
-}
-
 void Robot::teleop() {}
 
 void Robot::robotInit() {}

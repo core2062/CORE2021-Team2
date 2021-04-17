@@ -92,7 +92,7 @@ void LauncherSubsystem::cockLauncher() {
             time2.Start();
         }
 
-        if (time2.Get() > 0.25) {
+        if (time2.Get() > 0.30) {
             m_isReleasedEngaged = true;
             setMotorSpeed(-0.1);
             time2.Reset();

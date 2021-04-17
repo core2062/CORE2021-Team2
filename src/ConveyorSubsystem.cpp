@@ -2,9 +2,9 @@
 #include <CORERobotLib.h>
 
 ConveyorSubsystem::ConveyorSubsystem() : m_conveyorMotor(CONVEYOR_PORT),
-                                         m_conveyorForwardSpeed("Conveyor Forward Speed", 0.2), 
+                                         m_conveyorForwardSpeed("Conveyor Forward Speed", 0.5), 
                                          //TODO: Change these values to actual numbers based on testing
-                                         m_conveyorReverseSpeed("Conveyor Reverse Speed", -0.2) 
+                                         m_conveyorReverseSpeed("Conveyor Reverse Speed", -0.5) 
                                          //TODO: Change these values to actual numbers based on testing 
                                                                                                 {
 
