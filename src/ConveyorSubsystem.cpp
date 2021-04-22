@@ -2,7 +2,7 @@
 #include <CORERobotLib.h>
 
 ConveyorSubsystem::ConveyorSubsystem() : m_conveyorMotor(CONVEYOR_PORT),
-                                         m_conveyorForwardSpeed("Conveyor Forward Speed", 0.5), 
+                                         m_conveyorForwardSpeed("Conveyor Forward Speed", 0.7), 
                                          //TODO: Change these values to actual numbers based on testing
                                          m_conveyorReverseSpeed("Conveyor Reverse Speed", -0.5) 
                                          //TODO: Change these values to actual numbers based on testing 
@@ -23,9 +23,9 @@ void ConveyorSubsystem::teleopInit() {
 
 void ConveyorSubsystem::teleop() {
     //Allows for operator control of the robot
-    if (operatorJoystick->GetButton(COREJoystick::JoystickButton::LEFT_TRIGGER)) {
+    if (operatorJoystick->GetButton(COREJoystick::JoystickButton::LEFT_BUTTON)) {
         setMotor(m_conveyorForwardSpeed.Get());
-    } else if (operatorJoystick->GetButton(COREJoystick::JoystickButton::LEFT_BUTTON)) {
+    } else if (operatorJoystick->GetButton(COREJoystick::JoystickButton::LEFT_TRIGGER)) {
         setMotor(m_conveyorReverseSpeed.Get());
     } else {
         setMotor(0);

@@ -14,7 +14,7 @@ void LauncherSubsystem::robotInit() {
 	// Registers joystick axis and buttons, does inital setup for talons
 	operatorJoystick->RegisterAxis(CORE::COREJoystick::RIGHT_TRIGGER_AXIS);
 	operatorJoystick->RegisterButton(CORE::COREJoystick::B_BUTTON);
-	operatorJoystick->RegisterButton(CORE::COREJoystick::START_BUTTON);
+	operatorJoystick->RegisterButton(CORE::COREJoystick::A_BUTTON);
     initTalons();
 }
 
@@ -43,7 +43,7 @@ void LauncherSubsystem::teleop() {
     if (operatorJoystick->GetButton(CORE::COREJoystick::JoystickButton::B_BUTTON)) {
         m_wantedState = COCK;
     }
-    if (operatorJoystick->GetButton(CORE::COREJoystick::JoystickButton::START_BUTTON)) {
+    if (operatorJoystick->GetButton(CORE::COREJoystick::JoystickButton::A_BUTTON)) {
         m_wantedState = LAUNCH;
     }
     cockLauncher();
